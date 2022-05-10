@@ -1,0 +1,124 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/79db82fb44.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        #query{
+            border:none ;
+            border-bottom: 1px solid black;
+           
+            margin-top: 30px;
+            width: 200px;
+            height: 30px;
+            margin-left: 30px;
+        }
+        #movies{
+            /* border: 1px solid black; */
+            /* height: 200px; */
+            width: 200px;
+            border-top: none;
+            overflow: scroll;
+            overflow: hidden;
+            z-index: 9;
+            display: inline-block;
+            margin-left: 30px;
+            background-color: rgb(248, 232, 232);
+        }
+        #movies>p{
+            margin-left: 10px;
+        }
+        #navbar{
+            display: flex;
+            /* justify-content: space-between; */
+        }
+        #img{
+            margin-left: 40px;
+            width: 200px; 
+            height: 70px; 
+            object-fit: cover;
+            /* border: 5px solid black; */
+
+        }
+        #search{
+            border-bottom: 1px solid black;
+            
+            height: 30px;
+            object-fit: cover;
+            
+        }
+        #flex{
+            display: flex; 
+        }
+        #flex>h3{
+            margin-top: 30px;
+            margin-left: 20px; 
+            margin-right: 10px;
+        }
+        #box{
+            text-align: center;
+        }
+        #moviesdetails{
+            /* border: 5px solid red; */
+
+        }
+        #image{
+            width: 50%;
+            height: 400px;
+            margin: auto;
+        }
+        body{
+            background-color:#131a28;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <div >
+            <a href="index.html"><img id="img" src="Screenshot 2022-04-23 022045.png" alt=""></a>
+        
+        </div>
+        <div id="flex">
+            <h3>TV</h3>
+            <h3>Movies</h3>
+            <h3>Sports</h3>
+            <h3>Disney+</h3>
+        </div>
+        <div>
+           
+            <div>
+               
+                <input onkeydown ="debounc(main,1000)" type="text" id="query" placeholder="Search">
+                <i class="fa-solid fa-magnifying-glass" id="search" onclick="search()"></i>
+            </div>
+            
+        </div>
+    </div>    
+    <div id="moviesdetails"></div>
+</body>
+</html>
+<script>
+    let data = JSON.parse(localStorage.getItem("details"))
+    // console.log(data)
+    let box = document.createElement("div")
+    box.id="box"
+    let image = document.createElement("img")
+    image.src=data.Poster
+    image.id="image"
+
+    let name = document.createElement("h3")
+    name.innerText = data.Title
+    let release = document.createElement("p")
+    release.innerText=`Year of release: ${data.Year}`
+    let rating = document.createElement("p")
+    rating.innerText=`Rating : ${Math.floor(Math.random() * 10)}`
+    // console.log(rating)
+    box.append(image,name,release,rating)
+    document.getElementById("moviesdetails").append(box)
+
+
+</script>

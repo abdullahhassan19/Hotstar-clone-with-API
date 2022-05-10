@@ -1,0 +1,252 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/79db82fb44.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        
+        #query{
+            border:none ;
+            border-bottom: 1px solid black;
+           
+            margin-top: 30px;
+            width: 200px;
+            height: 30px;
+            margin-left: 30px;
+        }
+        #movies{
+            /* border: 1px solid black; */
+            background-color: #020813;
+            border-radius: 20px;
+            position:absolute;
+            top:12%;
+            right: 41.5%;         
+            z-index: 1;
+            width: 200px;
+            overflow: scroll
+            display: none;
+            
+          
+        }
+        #movies>p{
+            margin-left: 10px;
+        }
+        #navbar{
+            display: flex;
+            margin-bottom: 40px;
+            /* justify-content: space-between; */
+        }
+        #img{
+            margin-left: 40px;
+            width: 200px; 
+            height: 70px; 
+            object-fit: cover;
+            /* border: 5px solid black; */
+
+        }
+        #search{
+            border-bottom: 1px solid black;
+            
+            height: 30px;
+            object-fit: cover;
+            
+        }
+        #flex{
+            display: flex; 
+        }
+        #flex>h3{
+            margin-top: 30px;
+            margin-left: 20px; 
+            margin-right: 10px;
+        }
+        body{
+            background-color: #131a28;
+            color: white;
+        }
+        #container{
+            
+            color: white;
+            /* margin-top: 100px; */
+            /* border: 2px solid red; */
+            width: 90%;
+            margin: auto;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(4,1fr);
+        }
+        #box{
+            /* border: 1px solid black; */
+            width: 280px;
+            background-color: #142038;
+            
+            border-radius: 10px;
+            text-align: center;
+            
+        }
+        #box:hover{
+            width: 300px;
+            transform: scale(1.1);
+            background-color: #142038;
+            color: white;
+        }
+        #namehover:hover{
+            background-color: #020813;
+            cursor: pointer;
+        }
+        #image{
+            border-radius: 10px;
+            height: 300px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+   <div id="navbar">
+        <div >
+            <a href="index.html"><img id="img" src="Screenshot 2022-04-23 022045.png" alt=""></a>
+        
+        </div>
+        <div id="flex">
+            <h3>TV</h3>
+            <h3>Movies</h3>
+            <h3>Sports</h3>
+            <h3>Disney+</h3>
+        </div>
+        <div>
+           
+            <div>
+               
+                <input onkeydown ="debounc(main,1000)" type="text" id="query" placeholder="Search">
+                <i class="fa-solid fa-magnifying-glass" id="search" onclick="search()"></i>
+            </div>
+            <div id="movies"></div>
+        </div>
+   </div>
+   <div id="container">
+   </div>
+</body>
+</html>
+
+<script>
+let movies_div = document.getElementById("movies")
+let id;
+
+    async function searchmovies(){
+        // https://www.omdbapi.com/?apikey=916d286e=om_shanti_om
+
+        // 916d286e
+
+        try {
+            // let query=2022
+            query=document.getElementById("query").value
+
+        const res = await fetch(`https://www.omdbapi.com/?apikey=916d286e&s=${query}`)
+
+        const data = await res.json();
+        console.log(data.Search)
+        
+        
+        const movies = data.Search
+        
+        return movies
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+    async function search(query){
+        movies_div.innerText=null
+        try {
+        val="Marvel"
+        query=document.getElementById("query").value
+
+        const res = await fetch(`https://www.omdbapi.com/?apikey=916d286e&s=${query||val}`)
+
+        const data = await res.json();
+        // console.log(data.Search)
+        
+        // console.log(data)
+        const movies = data.Search
+       
+        search1(movies)
+        return movies;
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+    function search1(data){
+           
+            document.getElementById("container").innerHTML=null
+            data.forEach(function (el){
+            let box = document.createElement("div")
+            box.id="box"
+            let image = document.createElement("img")
+            image.src=el.Poster
+            image.id="image"
+
+            let name = document.createElement("h3")
+            name.innerText=el.Title
+
+            let year = document.createElement("p")
+            year.innerText=`Year Of Release: ${el.Year}`
+            let rating = document.createElement("p")
+            rating.innerText= `Rating: ${Math.floor(Math.random() * 10)}`
+
+            box.append(image,name,year,rating)
+            box.onclick=() =>{
+                showdetails(el)
+            }
+            document.getElementById("container").append(box)
+        })
+    }
+    function append(data){
+        // console.log(data)
+        
+        movies_div.innerText=null
+        data.forEach(function(el){
+            let Name = document.createElement("p")
+            Name.innerText=el.Title
+            Name.id="namehover"
+            Name.onclick=() =>{
+                search(Name)
+            }
+            movies_div.append(Name);
+           
+        })
+    }
+
+async function main(){
+    movies_div.innerText=null
+    let data = await searchmovies()
+    if(data === undefined){
+        return false;
+    }
+    
+    append(data)
+}
+window.onload = function() {
+    
+    search("bollywood")
+   
+};
+
+function debounc(func,delay){
+    
+    if(id){
+        clearTimeout(id);
+    }
+    id = setTimeout(function(){
+        func()
+    },delay)
+}
+
+
+function showdetails(data){
+    window.location.href="details.html"
+    localStorage.setItem("details",JSON.stringify(data))
+    // console.log(data)
+}
+</script>
